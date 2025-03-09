@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AoA Word Lookup</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/datatables.net-dt/js/dataTables.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/datatables.net-dt/css/jquery.dataTables.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+        #download-btn {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Age of Acquisition (AoA) Word Lookup</h2>
+        <input type="text" id="search-box" placeholder="Search for a word...">
+        <table id="word-table" class="display">
+            <thead>
+                <tr>
+                    <th>Word</th>
+                    <th>Reading AoA</th>
+                    <th>Writing AoA</th>
+                    <th>Kuperman AoA</th>
+                    <th>Prevalence</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted dynamically -->
+            </tbody>
+        </table>
+        <button id="download-btn">Download Selected Words</button>
+    </div>
+    
+    <script>
+        $(document).ready(function() {
+            let dataset = [
+                ["a", 5.0, 4.0, 2.89, 1.91],
+                ["aardvark", 10.5, 10.5, 9.89, 1.68],
+                ["aardwolf", 12.5, 14.5, "N/A", -0.78],
+                ["abaca", 15.5, 14.5, "N/A", -0.70],
+                ["aback", 11.5, 12.5, "N/A", 1.07]
+            ];
+
+            let table = $('#word-table').DataTable({
+                data: dataset,
+                columns: [
+                    { title: "Word" },
+                    { title: "Reading AoA" },
+                    { title: "Writing AoA" },
+                    { title: "Kuperman AoA" },
+                    { title: "Prevalence" }
+                ]
+            });
+
+            $('#search-box').on('keyup', function() {
+                table.search(this.value).draw();
+            });
+
+            $('#download-btn').click(function() {
+                let csvContent = "data:text/csv;charset=utf-8,Word,Reading AoA,Writing AoA,Kuperman AoA,Prevalence\n";
+                dataset.forEach(row => {
+                    csvContent += row.join(",") + "\n";
+                });
+                let encodedUri = encodeURI(csvContent);
+                let link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "AoA_Words.csv");
+                document.body.appendChild(link);
+                link.click();
+            });
+        });
+    </script>
+</body>
+</html>
