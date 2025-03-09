@@ -54,13 +54,13 @@
     
     <script>
         $(document).ready(function() {
-            fetch('aoa_data.json')  // 确保 JSON 文件在相同目录
+            fetch('aoa_data.json')  // Ensure JSON file is in the same directory
                 .then(response => response.json())
                 .then(data => {
                     let dataset = data.map(row => [
-                        row.Word, row.Reading_AoA, row.Writing_AoA, row.Speaking_AoA, row.Listening_AoA, row.Frequency, row.Subject
+                        row.Word, row.Reading, row.Writing, row.Prevalence, row.Length
                     ]);
-                    
+
                     let table = $('#word-table').DataTable({
                         data: dataset,
                         columns: [
@@ -68,7 +68,7 @@
                             { title: "Reading" },
                             { title: "Writing" },
                             { title: "Prevalence" },
-                            { title: "Length" },
+                            { title: "Length" }
                         ]
                     });
 
@@ -77,7 +77,7 @@
                     });
 
                     $('#download-btn').click(function() {
-                        let csvContent = "data:text/csv;charset=utf-8,Word,Reading AoA,Writing AoA,Speaking AoA,Listening AoA,Frequency,Subject\n";
+                        let csvContent = "data:text/csv;charset=utf-8,Word,Reading,Writing,Prevalence,Length\n";
                         dataset.forEach(row => {
                             csvContent += row.join(",") + "\n";
                         });
